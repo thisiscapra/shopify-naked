@@ -1,0 +1,81 @@
+{% comment %}
+  Important notes about pagination:
+  - Never access collection.products before the opening paginate tag.
+  - Never paginate by more than 50.
+{% endcomment %}
+
+{% paginate collection.products by 10 %}
+
+  <h1>{{ collection.title }}</h1>
+
+  {% comment %}
+    Collection sorting. Needs the JavaScript that is at the bottom of this file.
+  {% endcomment %}
+  {% if collection.products_count > 1 %}
+    <select class="sort-by right">
+      <option value="manual">Featured</option>
+      <option value="price-ascending">Price: Low to High</option>
+      <option value="price-descending">Price: Hight to Low</option>
+      <option value="title-ascending">A-Z</option>
+      <option value="title-descending">Z-A</option>
+      <option value="created-ascending">Oldest to Newest</option>
+      <option value="created-descending">Newest to Oldest</option>
+      <option value="best-selling">Best Selling</option>
+    </select>
+  {% endif %}
+
+  {% comment %}
+    Listing all tags within the current collection.
+    Shopify uses product tags to manage subcategories inside collections.
+    See 'How do I create subcategories of products?' at 
+    http://bit.ly/1j1Dti4 for details.
+  {% endcomment %}
+
+  {% if collection.all_tags.size > 0 %}
+    <ul>
+      <li class="{% unless current_tags %} active{% endunless %}">
+        {{ 'All' | link_to_remove_tag: current_tags.first }}
+      </li>
+      {% for tag in collection.all_tags %}
+        {% if current_tags contains tag %}
+          <li class="active">
+            {{ tag | link_to_remove_tag: tag }}
+          </li>
+        {% else %}
+          <li>
+            {{ tag | link_to_tag: tag }}
+          </li>
+        {% endif %}
+      {% endfor %}  
+    </ul>
+  {% endif %}
+
+  {% if collection.description.size > 0 %}
+    {{ collection.description }}
+  {% endif %}
+
+  {% for product in collection.products %}
+    <ul>
+      {% include 'product-grid-item' %}
+    </ul>
+  {% else %}
+    <p>There are no products in this view.</p>
+  {% endfor %}
+
+  {% if paginate.pages > 1 %}
+    {{ paginate | default_pagination }}
+  {% endif %}
+
+{% endpaginate %}
+
+{% comment %}
+  JavaScript for collection sorting.
+{% endcomment %}
+<script>
+jQuery('.sort-by')
+  .val('{{ collection.sort_by | default: collection.default_sort_by }}')
+  .on('change', function() {
+    Shopify.queryParams.sort_by = jQuery(this).val();
+    location.search = jQuery.param(Shopify.queryParams).replace(/\+/g, '%20');
+  });
+</script>
