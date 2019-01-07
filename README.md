@@ -1,3 +1,5 @@
+## This is no longer actively maintained. I would recommend using the <a href="https://github.com/Shopify/skeleton-theme">Shopify Skeleton</a> theme.
+
 Shopify Naked theme
 ---------------------------------------------
 
