@@ -1,4 +1,4 @@
-## This is no longer actively maintained. I would recommend using the <a href="https://github.com/Shopify/skeleton-theme">Shopify Skeleton</a> theme.
+## This is no longer actively maintained.
 
 Shopify Naked theme
 ---------------------------------------------
